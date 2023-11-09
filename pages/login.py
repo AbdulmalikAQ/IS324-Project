@@ -1,5 +1,7 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox as ms
+import hashlib
+import sqlite3
 
 class Login:
     def __init__(self, main):
@@ -22,7 +24,13 @@ class Login:
         tk.Button(self.frame, text="Sign Up", width=10, command=self.signup).place(x=295, y=317)
 
     def submit(self):
-        messagebox.showerror(title="Not available yet", message="Wait for the next version")
-
+        conn = sqlite3.connect("ksu_golf_carts.db")
+        passHashed = hashlib.sha256(self.password.get().encode()).hexdigest()
+        ff = conn.execute("SELECT password from users where user_id=" + self.id.get())
+        ff = list(ff)
+        if ff[0][0] == passHashed:
+            tk.messagebox.showinfo("data accepted", "Thanks for loging in!")
+        else:
+            tk.messagebox.showerror(title="Wrong Password", message="The password you entered is incorrect")
     def signup(self):
         self.main.change_page("signup")
