@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox as ms
+from tkinter import messagebox
 import hashlib
 import sqlite3
 
