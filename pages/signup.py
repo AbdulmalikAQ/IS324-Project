@@ -47,7 +47,44 @@ class SignUp:
         tk.Button(self.frame, text="Login", width=10, command=self.login).place(x=295, y=347)
 
     def submit(self):
-        messagebox.showerror(title="Not available yet", message="Wait for the next version")
+        if self.first_name.get() == "" and self.last_name=="":
+            return messagebox.showerror(title="Missing Data", message="You must write your full name.")
+
+        if not self.id.get().isdigit():
+            return messagebox.showerror(title="Wrong Data", message="ID must be digits only.")
+
+        if len(self.id.get()) != 10 and len(self.id.get()) != 6:
+            return messagebox.showerror(title="Wrong Data", message="ID must be 10 or 6 digits only.")
+
+        if len(self.Password.get()) < 6:
+            return messagebox.showerror(title="Wrong Data", message="Password must be at least 6 digits or letters")
+
+        if not self.EmailAddress.get().endswith("@ksu.edu.sa"):
+            return messagebox.showerror(title="Wrong Data", message="Email address must ends with '@ksu.edu.sa'")
+
+        if not self.phoneNumber.get().startswith("05"):
+            return messagebox.showerror(title="Wrong Data",message="Phone number must starts with 05.")
+
+        if len(self.phoneNumber.get()) != 10:
+            return messagebox.showerror(title="Wrong Data", message="Phone number must have 10 digits only.")
+
+        hashed = hashlib.sha256(self.Password.get().encode()).hexdigest()
+        conn = sqlite3.connect("ksu_golf_carts.db")
+        parameters = """INSERT INTO users (user_id ,first_name ,last_name ,user_class ,password ,email ,phone_number) VALUES (?,?,?,?,?,?,?)"""
+        datatuple = (
+        self.id.get(), self.first_name.get(), self.last_name.get(), self.team.get(), hashed, self.EmailAddress.get(),
+        self.phoneNumber.get())
+        conn.execute(parameters, datatuple)
+        conn.commit()
+
+        self.id.set("")
+        self.first_name.set("")
+        self.last_name.set("")
+        self.team.set(0)
+        self.Password.set("")
+        self.EmailAddress.set("")
+        self.phoneNumber.set("")
+        messagebox.showinfo(title="Form Submitted Successfully", message="Your form has been successfully submitted.")
 
     def login(self):
         self.main.change_page("login")
