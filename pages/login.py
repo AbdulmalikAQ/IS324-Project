@@ -24,12 +24,16 @@ class Login:
         tk.Button(self.frame, text="Sign Up", width=10, command=self.signup).place(x=295, y=317)
 
     def submit(self):
+        self.main.change_page("userwindow")
+
         conn = sqlite3.connect("ksu_golf_carts.db")
         passHashed = hashlib.sha256(self.password.get().encode()).hexdigest()
         ff = conn.execute("SELECT password from users where user_id=" + self.id.get())
         ff = list(ff)
-        if ff[0][0] == passHashed:
-            tk.messagebox.showinfo("data accepted", "Thanks for loging in!")
+        if len(ff)==0:
+            tk.messagebox.showerror(title="Wrong ID", message="The ID you entered is incorrect")
+        elif ff[0][0] == passHashed:
+            self.main.change_page("userwindow")
         else:
             tk.messagebox.showerror(title="Wrong Password", message="The password you entered is incorrect")
     def signup(self):

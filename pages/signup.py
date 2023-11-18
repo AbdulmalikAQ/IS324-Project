@@ -71,9 +71,7 @@ class SignUp:
         hashed = hashlib.sha256(self.Password.get().encode()).hexdigest()
         conn = sqlite3.connect("ksu_golf_carts.db")
         parameters = """INSERT INTO users (user_id ,first_name ,last_name ,user_class ,password ,email ,phone_number) VALUES (?,?,?,?,?,?,?)"""
-        datatuple = (
-        self.id.get(), self.first_name.get(), self.last_name.get(), self.team.get(), hashed, self.EmailAddress.get(),
-        self.phoneNumber.get())
+        datatuple = (self.id.get(), self.first_name.get(), self.last_name.get(), self.team.get(), hashed, self.EmailAddress.get(),self.phoneNumber.get())
         conn.execute(parameters, datatuple)
         conn.commit()
 
