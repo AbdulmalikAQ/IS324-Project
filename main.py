@@ -68,7 +68,7 @@ class Main:
 		self.window.geometry("+600+200")
 
 		self.colleges = colleges
-		self.current_page = pages.get("user")(self)
+		self.current_page = pages.get("signup")(self)
 
 		self.window.mainloop()
 
