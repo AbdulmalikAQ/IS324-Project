@@ -58,7 +58,7 @@ class Main:
 		self.window.title("KSU Golf Carts")
 		self.window.geometry("+600+200")
 
-		self.current_page = Login(self)
+		self.current_page = pages.get("signup")(self)
 
 		self.window.mainloop()
 
