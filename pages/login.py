@@ -24,12 +24,25 @@ class Login:
         tk.Button(self.frame, text="Sign Up", width=10, command=self.signup).place(x=295, y=317)
 
     def submit(self):
+<<<<<<< HEAD
         enteredPass = hashlib.sha256(self.password.get().encode()).hexdigest()
         conn = sqlite3.connect("ksu_golf_carts.db")
         userData = list(conn.execute("SELECT first_name, last_name, user_class, password FROM users WHERE user_id=" + self.id.get()))
         conn.close()
         if not userData or userData[0][3] != enteredPass:
             messagebox.showerror(title="Wrong User ID or Password", message="The entered user id or password is not valid.")
+=======
+        self.main.change_page("userwindow")
+
+        conn = sqlite3.connect("ksu_golf_carts.db")
+        passHashed = hashlib.sha256(self.password.get().encode()).hexdigest()
+        ff = conn.execute("SELECT password from users where user_id=" + self.id.get())
+        ff = list(ff)
+        if len(ff)==0:
+            tk.messagebox.showerror(title="Wrong ID", message="The ID you entered is incorrect")
+        elif ff[0][0] == passHashed:
+            self.main.change_page("userwindow")
+>>>>>>> 01d68b088f0f0c55945a677f27f98579e40a207f
         else:
             if userData[0][2] == "Admin":
                 self.main.change_page("admin", {"first_name": userData[0][0], "last_name": userData[0][1]})
