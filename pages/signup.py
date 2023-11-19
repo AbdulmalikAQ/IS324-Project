@@ -83,6 +83,7 @@ class SignUp:
             self.phone_number.set("")
 
             messagebox.showinfo(title="Signed Up Successfully", message="You can now log in with your data.")
+            self.main.change_page("login")
         else:
             messagebox.showerror(title="User ID Already Exists", message="User with id '{}' already exists, try logging in.".format(self.id.get()))
 
