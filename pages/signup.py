@@ -66,7 +66,6 @@ class SignUp:
             return messagebox.showerror(title="Wrong Data", message="Phone number must be a number and starts with '05' and it must be exactly 10 numbers.")
 
         conn = sqlite3.connect("ksu_golf_carts.db")
-<<<<<<< HEAD
         user = list(conn.execute("SELECT user_id FROM users WHERE user_id=" + self.id.get()))
         if not user:
             hashedPass = hashlib.sha256(self.password.get().encode()).hexdigest()
@@ -74,12 +73,6 @@ class SignUp:
             data = (self.id.get(), self.first_name.get(), self.last_name.get(), self.email_address.get(), self.phone_number.get(), self.teams[self.team.get()], hashedPass)
             conn.execute(query, data)
             conn.commit()
-=======
-        parameters = """INSERT INTO users (user_id ,first_name ,last_name ,user_class ,password ,email ,phone_number) VALUES (?,?,?,?,?,?,?)"""
-        datatuple = (self.id.get(), self.first_name.get(), self.last_name.get(), self.team.get(), hashed, self.EmailAddress.get(),self.phoneNumber.get())
-        conn.execute(parameters, datatuple)
-        conn.commit()
->>>>>>> 01d68b088f0f0c55945a677f27f98579e40a207f
 
             self.id.set("")
             self.first_name.set("")
