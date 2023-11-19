@@ -13,6 +13,15 @@ pages = {
 	"user": User
 }
 
+colleges = (
+    "Computer Science and Information Technology",
+    "Business Administration",
+    "Engineering",
+    "Architecture and Planning",
+    "Food and Agriculture Sciences",
+    "Science"
+)
+
 conn = sqlite3.connect("ksu_golf_carts.db")
 conn.execute('''
 	CREATE TABLE IF NOT EXISTS users (
@@ -58,7 +67,8 @@ class Main:
 		self.window.title("KSU Golf Carts")
 		self.window.geometry("+600+200")
 
-		self.current_page = pages.get("signup")(self)
+		self.colleges = colleges
+		self.current_page = pages.get("user")(self)
 
 		self.window.mainloop()
 
