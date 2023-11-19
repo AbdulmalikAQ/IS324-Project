@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import sqlite3
 
 from pages.login import Login
@@ -66,6 +67,8 @@ class Main:
 		self.window = tk.Tk()
 		self.window.title("KSU Golf Carts")
 		self.window.geometry("+600+200")
+
+		ttk.Style().theme_use("clam")
 
 		self.colleges = colleges
 		self.current_page = pages.get("signup")(self)

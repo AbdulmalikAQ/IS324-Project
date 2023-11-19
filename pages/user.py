@@ -10,15 +10,10 @@ class User:
         self.frame.grid_propagate(0)
         self.frame.grid()
 
-        style = ttk.Style()
-        style.configure("TNotebook", background="skyblue")
-        style.theme_use("clam")
-        style.configure("Treeview", background="#F0F0F0", fieldbackground="#F0F0F0")
-
         self.notebook = ttk.Notebook(self.frame)
         self.notebook.place(x=0, y=0)
 
-        tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue").place(x=20, y=45)
+        tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=45)
 
         self.labelframe = tk.Frame(self.notebook, bg="skyblue", width=500, height=400)
 
@@ -41,11 +36,11 @@ class User:
         end_date = DateEntry(self.labelframe, state="readonly")
         end_date.place(x=200, y=220)
         end_hour = tk.StringVar(value=time_now.hour)
-        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=end_hour,).place(x=300, y=220)
+        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=end_hour).place(x=300, y=220)
         end_min = tk.StringVar(value=time_now.minute)
         tk.Spinbox(self.labelframe, from_=0, to=59, wrap=True, width=3, state="readonly", textvariable=end_min).place(x=335, y=220)
 
-        tk.Button(self.labelframe, text="Reserve", width=10, command=self.reserve).place(x=220, y=290)
+        ttk.Button(self.labelframe, text="Reserve", command=self.reserve).place(x=220, y=290)
 
         self.labelframe2 = tk.Frame(self.notebook, bg="skyblue", width=500, height=400)
 
@@ -60,9 +55,9 @@ class User:
         self.tv_of_reserv.column(3, minwidth=0, width=160, anchor=tk.CENTER)
         self.tv_of_reserv.place(x=30, y=110)
 
-        tk.Button(self.labelframe2, text="Show", width=10, command=self.show).place(x=220, y=300)
+        ttk.Button(self.labelframe2, text="Show", command=self.show).place(x=220, y=300)
 
-        tk.Button(self.frame, text="Logout", width=10, command=self.logout).place(x=405, y=360)
+        ttk.Button(self.frame, text="Logout", command=self.logout).place(x=405, y=360)
 
         self.notebook.add(self.labelframe, text="Reserve a Cart")
         self.notebook.add(self.labelframe2, text="View my Reservations")

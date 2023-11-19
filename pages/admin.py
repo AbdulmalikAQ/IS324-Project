@@ -10,22 +10,22 @@ class Admin:
         self.frame.grid_propagate(0)
         self.frame.grid()
 
-        tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue").place(x=20, y=20)
+        tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=20)
 
         tk.Label(self.frame, text="Golf Cart Plate Number:", bg="skyblue").place(x=50, y=120)
         self.golf_cart_plate_num = tk.StringVar()
-        tk.Entry(self.frame, width=30, textvariable=self.golf_cart_plate_num).place(x=220, y=120)
+        ttk.Entry(self.frame, width=30, textvariable=self.golf_cart_plate_num).place(x=220, y=120)
 
         tk.Label(self.frame, text="College:", bg="skyblue").place(x=80, y=155)
         self.college = tk.StringVar(value=self.main.colleges[0])
         self.cb = ttk.Combobox(self.frame, width=40, textvariable=self.college, values=self.main.colleges, state="readonly").place(x=180, y=155)
 
-        tk.Button(self.frame, text="Create", width=10, command=self.create).place(x=220, y=220)
+        ttk.Button(self.frame, text="Create", width=10, command=self.create).place(x=220, y=220)
 
         tk.Label(self.frame, text="Create a backup for all golf carts", bg="skyblue").place(x=120, y=280)
-        tk.Button(self.frame, text="Backup", width=10, command=self.backup).place(x=310, y=277)
+        ttk.Button(self.frame, text="Backup", width=10, command=self.backup).place(x=310, y=277)
 
-        tk.Button(self.frame, text="Logout", width=10, command=self.logout).place(x=220, y=340)
+        ttk.Button(self.frame, text="Logout", width=10, command=self.logout).place(x=220, y=340)
 
     def create(self):
         conn = sqlite3.connect("ksu_golf_carts.db")

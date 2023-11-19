@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import hashlib
 import sqlite3
 
@@ -10,20 +10,28 @@ class Login:
         self.frame.grid_propagate(0)
         self.frame.grid()
 
-        tk.Label(self.frame, text="ID:", bg="skyblue").place(x=100, y=120)
+        tk.Label(self.frame, text="Welcome to our Application!", bg="skyblue", font=("Arial", 18, "bold")).place(x=85, y=60)
+
+        tk.Label(self.frame, text="ID:", bg="skyblue").place(x=100, y=155)
         self.id = tk.StringVar()
-        tk.Entry(self.frame, width=30, textvariable=self.id).place(x=200, y=120)
+        ttk.Entry(self.frame, width=30, textvariable=self.id).place(x=200, y=155)
 
-        tk.Label(self.frame, text="Password:", bg="skyblue").place(x=100, y=155)
+        tk.Label(self.frame, text="Password:", bg="skyblue").place(x=100, y=190)
         self.password = tk.StringVar()
-        tk.Entry(self.frame, width=30, textvariable=self.password).place(x=200, y=155)
+        ttk.Entry(self.frame, width=30, textvariable=self.password).place(x=200, y=190)
 
-        tk.Button(self.frame, text="Submit", width=10, command=self.submit).place(x=220, y=250)
+        ttk.Button(self.frame, text="Login", command=self.login).place(x=220, y=260)
 
-        tk.Label(self.frame, text="Don't have an account?", bg="skyblue").place(x=135, y=320)
-        tk.Button(self.frame, text="Sign Up", width=10, command=self.signup).place(x=295, y=317)
+        tk.Label(self.frame, text="Don't have an account?", bg="skyblue").place(x=135, y=330)
+        ttk.Button(self.frame, text="Sign Up", command=self.signup).place(x=295, y=325)
 
-    def submit(self):
+    def login(self):
+        if not self.id.get().isdigit():
+            return messagebox.showerror(title="Wrong Data", message="ID must be digits only.")
+
+        if len(self.password.get()) < 6:
+            return messagebox.showerror(title="Wrong Data", message="Password must be at least 6 digits or letters")
+        
         enteredPass = hashlib.sha256(self.password.get().encode()).hexdigest()
         conn = sqlite3.connect("ksu_golf_carts.db")
         userData = list(conn.execute("SELECT first_name, last_name, user_class, password FROM users WHERE user_id=" + self.id.get()))
