@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import sqlite3
 
 from pages.login import Login
@@ -12,6 +13,15 @@ pages = {
 	"admin": Admin,
 	"user": User
 }
+
+colleges = (
+    "Computer Science and Information Technology",
+    "Business Administration",
+    "Engineering",
+    "Architecture and Planning",
+    "Food and Agriculture Sciences",
+    "Science"
+)
 
 conn = sqlite3.connect("ksu_golf_carts.db")
 conn.execute('''
@@ -58,6 +68,9 @@ class Main:
 		self.window.title("KSU Golf Carts")
 		self.window.geometry("+600+200")
 
+		ttk.Style().theme_use("clam")
+
+		self.colleges = colleges
 		self.current_page = pages.get("signup")(self)
 
 		self.window.mainloop()
