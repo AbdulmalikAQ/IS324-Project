@@ -49,13 +49,15 @@ class User:
 
         tk.Label(self.labelframe2, text="My Reservations", bg="skyblue", font=("Arial", 18, "bold")).place(x=150, y=60)
 
-        self.tv_of_reserv = ttk.Treeview(self.labelframe2, height=7, columns=(1, 2, 3), show="headings")
-        self.tv_of_reserv.heading(1, text="Plate Number")
+        self.tv_of_reserv = ttk.Treeview(self.labelframe2, height=7, columns=(1, 2, 3, 4), show="headings")
+        self.tv_of_reserv.heading(1, text="Location")
         self.tv_of_reserv.column(1, minwidth=0, width=110, anchor=tk.CENTER)
-        self.tv_of_reserv.heading(2, text="Start Date And Time")
-        self.tv_of_reserv.column(2, minwidth=0, width=160, anchor=tk.CENTER)
-        self.tv_of_reserv.heading(3, text="End Date And Time")
+        self.tv_of_reserv.heading(2, text="Plate Number")
+        self.tv_of_reserv.column(2, minwidth=0, width=110, anchor=tk.CENTER)
+        self.tv_of_reserv.heading(3, text="Start Date And Time")
         self.tv_of_reserv.column(3, minwidth=0, width=160, anchor=tk.CENTER)
+        self.tv_of_reserv.heading(4, text="End Date And Time")
+        self.tv_of_reserv.column(4, minwidth=0, width=160, anchor=tk.CENTER)
         self.tv_of_reserv.place(x=30, y=110)
 
         ttk.Button(self.labelframe2, text="Show", command=self.show).place(x=220, y=300)
@@ -73,7 +75,6 @@ class User:
         endDate = datetime(2000 + int(edate[2]), int(edate[0]), int(edate[1]), int(self.end_hour.get()),int(self.end_min.get()))
 
         reserveTime = endDate-startDate
-        print(reserveTime)
         maxFaculty= datetime(1, 1, 1,1,30) - datetime(1, 1, 1,0,0)
         maxEmployees= datetime(1, 1, 1,1,0) - datetime(1, 1, 1,0,0)
         maxStudents= datetime(1, 1, 1,0,30) - datetime(1, 1, 1,0,0)
@@ -118,7 +119,12 @@ class User:
 
     def show(self):
         self.tv_of_reserv.delete(*self.tv_of_reserv.get_children())
-        self.tv_of_reserv.insert(parent="", index=0, values=("EDJ1232", "2023-11-19 23:55", "2023-11-20 00:25"))
+        conn = sqlite3.connect("ksu_golf_carts.db")
+        sql = ("SELECT golf_carts.college, reservations.plate_number, reservations.start_time, reservations.end_time FROM reservations JOIN golf_carts ON golf_carts.plate_number=reservations.plate_number WHERE user_id = ?")
+        col = (self.userID,)
+        reservations = list(conn.execute(sql, col))
+        for res in reservations:
+            self.tv_of_reserv.insert(parent="", index=0, values=(res[0], res[1], res[2],res[3]))
         # for i, data in enumerate([(x, x+5, x+10) for x in range(5)]):
         #     self.tv_of_reserv.insert(parent="", index=i, values=data)
 
