@@ -64,7 +64,7 @@ class SignUp:
 
         if self.team.get() == 0 and len(self.id.get()) != 10:
             return messagebox.showerror(title="Wrong Data", message="As Student, you must enter 10 digits for ID.")
-        elif len(self.id.get()) != 6:
+        elif self.team.get() != 0 and len(self.id.get()) != 6:
             return messagebox.showerror(title="Wrong Data", message="As {}, you must enter 6 digits for ID.".format(self.teams[self.team.get()]))
 
         conn = sqlite3.connect("ksu_golf_carts.db")

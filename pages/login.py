@@ -42,7 +42,7 @@ class Login:
             if userData[0][2] == "Admin":
                 self.main.change_page("admin", {"first_name": userData[0][0], "last_name": userData[0][1]})
             else:
-                self.main.change_page("user", {"first_name": userData[0][0], "last_name": userData[0][1]})
+                self.main.change_page("user", {"first_name": userData[0][0], "last_name": userData[0][1], "userClass":userData[0][2],"userID":self.id.get()})
 
     def signup(self):
         self.main.change_page("signup")

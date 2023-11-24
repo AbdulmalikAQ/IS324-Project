@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 from datetime import datetime
+import sqlite3
 
 class User:
     def __init__(self, main, args = {}):
@@ -13,6 +14,8 @@ class User:
         self.notebook = ttk.Notebook(self.frame)
         self.notebook.place(x=0, y=0)
 
+        self.userID=args.get("userID")
+        self.userClass=args.get("userClass")
         tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=45)
 
         self.labelframe = tk.Frame(self.notebook, bg="skyblue", width=500, height=400)
@@ -24,21 +27,21 @@ class User:
         self.cb = ttk.Combobox(self.labelframe, width=40, textvariable=self.college, values=self.main.colleges, state="readonly").place(x=150, y=130)
 
         tk.Label(self.labelframe, text="Start date and time:", bg="skyblue").place(x=70, y=180)
-        start_date = DateEntry(self.labelframe, state="readonly")
-        start_date.place(x=200, y=180)
+        self.start_date = DateEntry(self.labelframe, state="readonly")
+        self.start_date.place(x=200, y=180)
         time_now = datetime.now()
-        start_hour = tk.StringVar(value=time_now.hour)
-        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=start_hour).place(x=300, y=180)
-        start_min = tk.StringVar(value=time_now.minute)
-        tk.Spinbox(self.labelframe, from_=0, to=59, wrap=True, width=3, state="readonly", textvariable=start_min).place(x=335, y=180)
+        self.start_hour = tk.StringVar(value=time_now.hour)
+        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=self.start_hour).place(x=300, y=180)
+        self.start_min = tk.StringVar(value=time_now.minute)
+        tk.Spinbox(self.labelframe, from_=0, to=59, wrap=True, width=3, state="readonly", textvariable=self.start_min).place(x=335, y=180)
 
         tk.Label(self.labelframe, text="End date and time:", bg="skyblue").place(x=70, y=220)
-        end_date = DateEntry(self.labelframe, state="readonly")
-        end_date.place(x=200, y=220)
-        end_hour = tk.StringVar(value=time_now.hour)
-        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=end_hour).place(x=300, y=220)
-        end_min = tk.StringVar(value=time_now.minute)
-        tk.Spinbox(self.labelframe, from_=0, to=59, wrap=True, width=3, state="readonly", textvariable=end_min).place(x=335, y=220)
+        self.end_date = DateEntry(self.labelframe, state="readonly")
+        self.end_date.place(x=200, y=220)
+        self.end_hour = tk.StringVar(value=time_now.hour)
+        tk.Spinbox(self.labelframe, from_=0, to=23, wrap=True, width=3, state="readonly", textvariable=self.end_hour).place(x=300, y=220)
+        self.end_min = tk.StringVar(value=time_now.minute)
+        tk.Spinbox(self.labelframe, from_=0, to=59, wrap=True, width=3, state="readonly", textvariable=self.end_min).place(x=335, y=220)
 
         ttk.Button(self.labelframe, text="Reserve", command=self.reserve).place(x=220, y=290)
 
@@ -63,7 +66,55 @@ class User:
         self.notebook.add(self.labelframe2, text="View my Reservations")
 
     def reserve(self):
-        messagebox.showwarning(title="Not Available Yet", message="Wait for the next version.")
+        sdate= self.start_date.get().split("/")
+        startDate=datetime(2000+int(sdate[2]),int(sdate[0]),int(sdate[1]),int(self.start_hour.get()),int(self.start_min.get()))
+
+        edate=self.end_date.get().split(("/"))
+        endDate = datetime(2000 + int(edate[2]), int(edate[0]), int(edate[1]), int(self.end_hour.get()),int(self.end_min.get()))
+
+        reserveTime = endDate-startDate
+        print(reserveTime)
+        maxFaculty= datetime(1, 1, 1,1,30) - datetime(1, 1, 1,0,0)
+        maxEmployees= datetime(1, 1, 1,1,0) - datetime(1, 1, 1,0,0)
+        maxStudents= datetime(1, 1, 1,0,30) - datetime(1, 1, 1,0,0)
+
+        if reserveTime>maxFaculty: # reserve time > 01:30
+            return messagebox.showerror(title="Time exceed",message="you can't resereve a cart for that long time")
+        elif reserveTime > maxEmployees and self.userClass == "employee": # resereve time > 01:00 for an employee
+            return messagebox.showerror(title="Time exceed",message="you can't resereve a cart for that long time")
+        elif reserveTime > maxStudents and self.userClass == "Student": #reserveTime > 00:30 for a student
+            return messagebox.showerror(title="Time exceed",message="you can't resereve a cart for that long time")
+        else:
+            conn = sqlite3.connect("ksu_golf_carts.db")
+            sql = ("SELECT plate_number FROM golf_carts WHERE college = ?")
+            col = (self.college.get(),)
+            carts = list(conn.execute(sql, col))
+
+            for plate in carts:
+                sql = ("SELECT start_time as '[timestamp]', end_time as '[timestamp]' FROM reservations WHERE plate_number = ?")
+                col = plate
+                reservedDates = list(conn.execute(sql, col))
+                noConflict=True
+                for date in reservedDates:
+                    date=list(date)
+                    startReserved = datetime.strptime(date[0], '%Y-%m-%d %H:%M:%S')
+                    endReserved = datetime.strptime(date[1], '%Y-%m-%d %H:%M:%S')
+
+                    if startReserved <= startDate <= endReserved:
+                        noConflict=False
+                    elif startReserved <= endDate <= endReserved:
+                        noConflict=False
+                    elif startDate <= startReserved and endDate >= endReserved:
+                        noConflict=False
+
+                if noConflict==True:
+                    sql = "INSERT INTO reservations (plate_number, user_id, start_time, end_time) VALUES (?,?,?,?)"
+                    values = (plate[0], self.userID, startDate, endDate)
+                    print(values)
+                    conn.execute(sql, values)
+                    conn.commit()
+                    return messagebox.showinfo(title="Reserved", message="You reserved cart with plate number '{}' from '{}' college at '{}' to '{}'".format(plate[0], self.college.get(), startDate, endDate))
+            return messagebox.showerror(title="No carts", message="There is no carts available from this college at this time.")
 
     def show(self):
         self.tv_of_reserv.delete(*self.tv_of_reserv.get_children())
