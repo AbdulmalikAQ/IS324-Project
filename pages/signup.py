@@ -62,7 +62,7 @@ class SignUp:
         if not re.search("^[A-Za-z0-9.]+@ksu.edu.sa$", self.email_address.get()):
             return messagebox.showerror(title="Wrong Data", message="Email address must formatted as 'XXXXXXXX@ksu.edu.sa'")
 
-        if not re.search("^05d{8}$", self.phone_number.get()):
+        if not re.search("^05\d{8}$", self.phone_number.get()):
             return messagebox.showerror(title="Wrong Data", message="Phone number must formatted as '05XXXXXXXX' (10 numbers only)")
         
         if not re.search("^[A-Za-z0-9]{6,}$", self.password.get()):
