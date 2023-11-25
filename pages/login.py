@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-import hashlib
 import sqlite3
+import hashlib
+import re
 
 class Login:
     def __init__(self, main, args = {}):
@@ -22,14 +23,14 @@ class Login:
 
         ttk.Button(self.frame, text="Login", command=self.login).place(x=220, y=260)
 
-        tk.Label(self.frame, text="Don't have an account?", bg="skyblue").place(x=135, y=330)
-        ttk.Button(self.frame, text="Sign Up", command=self.signup).place(x=295, y=325)
+        tk.Label(self.frame, text="Don't have an account?", bg="skyblue").place(x=140, y=330)
+        ttk.Button(self.frame, text="Sign Up", command=self.signup).place(x=290, y=325)
 
     def login(self):
         if not self.id.get().isdigit():
             return messagebox.showerror(title="Wrong Data", message="ID must be digits only.")
 
-        if len(self.password.get()) < 6:
+        if not re.search("^[A-Za-z0-9]{6,}$", self.password.get()):
             return messagebox.showerror(title="Wrong Data", message="Password must be at least 6 digits or letters")
         
         enteredPass = hashlib.sha256(self.password.get().encode()).hexdigest()
@@ -42,7 +43,7 @@ class Login:
             if userData[0][2] == "Admin":
                 self.main.change_page("admin", {"first_name": userData[0][0], "last_name": userData[0][1]})
             else:
-                self.main.change_page("user", {"first_name": userData[0][0], "last_name": userData[0][1], "userClass":userData[0][2],"userID":self.id.get()})
+                self.main.change_page("user", {"first_name": userData[0][0], "last_name": userData[0][1], "user_id": self.id.get(), "user_class": userData[0][2]})
 
     def signup(self):
         self.main.change_page("signup")

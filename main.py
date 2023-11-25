@@ -14,14 +14,21 @@ pages = {
 	"user": User
 }
 
-colleges = (
-    "Computer Science and Information Technology",
-    "Business Administration",
-    "Engineering",
-    "Architecture and Planning",
-    "Food and Agriculture Sciences",
-    "Science"
-)
+constants = {
+    "colleges": (
+        "Computer Science and Information Technology",
+    	"Business Administration",
+    	"Engineering",
+    	"Architecture and Planning",
+    	"Food and Agriculture Sciences",
+    	"Science"
+	),
+	"user_max_time": {
+		"Factuly": 5400,
+		"Employee": 3600,
+		"Student": 1800
+	}
+}
 
 conn = sqlite3.connect("ksu_golf_carts.db")
 conn.execute('''
@@ -70,7 +77,7 @@ class Main:
 
 		ttk.Style().theme_use("clam")
 
-		self.colleges = colleges
+		self.constants = constants
 		self.current_page = pages.get("signup")(self)
 
 		self.window.mainloop()
