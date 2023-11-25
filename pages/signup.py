@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
 import hashlib
+import re
 
 class SignUp:
     def __init__(self, main, args = {}):
@@ -44,28 +45,29 @@ class SignUp:
         ttk.Button(self.frame, text="Sign Up", command=self.signup).place(x=220, y=300)
 
         tk.Label(self.frame, text="Already have an account?", bg="skyblue").place(x=135, y=350)
-        ttk.Button(self.frame, text="Login", command=self.login).place(x=295, y=347)
+        ttk.Button(self.frame, text="Login", command=self.login).place(x=295, y=345)
 
     def signup(self):
-        if self.first_name.get() == "" or self.last_name == "":
+        if self.first_name.get() == "" or self.last_name.get() == "":
             return messagebox.showerror(title="Missing Data", message="You must write your full name.")
 
         if not self.id.get().isdigit():
             return messagebox.showerror(title="Wrong Data", message="ID must be digits only.")
-
-        if len(self.password.get()) < 6:
-            return messagebox.showerror(title="Wrong Data", message="Password must be at least 6 digits or letters")
-
-        if not self.email_address.get().endswith("@ksu.edu.sa"):
-            return messagebox.showerror(title="Wrong Data", message="Email address must ends with '@ksu.edu.sa'")
-
-        if not self.phone_number.get().isdigit() or not self.phone_number.get().startswith("05") or len(self.phone_number.get()) != 10:
-            return messagebox.showerror(title="Wrong Data", message="Phone number must be a number and starts with '05' and it must be exactly 10 numbers.")
-
+        
         if self.team.get() == 0 and len(self.id.get()) != 10:
             return messagebox.showerror(title="Wrong Data", message="As Student, you must enter 10 digits for ID.")
         elif self.team.get() != 0 and len(self.id.get()) != 6:
             return messagebox.showerror(title="Wrong Data", message="As {}, you must enter 6 digits for ID.".format(self.teams[self.team.get()]))
+
+        self.email_address.set(self.email_address.get().lower())
+        if not re.search("^[A-Za-z0-9.]+@ksu.edu.sa$", self.email_address.get()):
+            return messagebox.showerror(title="Wrong Data", message="Email address must formatted as 'XXXXXXXX@ksu.edu.sa'")
+
+        if not re.search("^05\d{8}$", self.phone_number.get()):
+            return messagebox.showerror(title="Wrong Data", message="Phone number must formatted as '05XXXXXXXX' (10 numbers only)")
+        
+        if not re.search("^[A-Za-z0-9]{6,}$", self.password.get()):
+            return messagebox.showerror(title="Wrong Data", message="Password must be at least 6 digits or letters")
 
         conn = sqlite3.connect("ksu_golf_carts.db")
         user = list(conn.execute("SELECT user_id FROM users WHERE user_id=" + self.id.get()))
@@ -87,7 +89,7 @@ class SignUp:
             messagebox.showinfo(title="Signed Up Successfully", message="You can now log in with your data.")
             self.main.change_page("login")
         else:
-            messagebox.showerror(title="User ID Already Exists", message="User with id '{}' already exists, try logging in.".format(self.id.get()))
+            messagebox.showerror(title="User Already Exists", message="User with id '{}' already exists, try logging in.".format(self.id.get()))
 
         conn.close()
 

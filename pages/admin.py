@@ -12,36 +12,41 @@ class Admin:
 
         tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=20)
 
-        tk.Label(self.frame, text="Golf Cart Plate Number:", bg="skyblue").place(x=50, y=120)
-        self.golf_cart_plate_num = tk.StringVar()
-        ttk.Entry(self.frame, width=30, textvariable=self.golf_cart_plate_num).place(x=220, y=120)
+        tk.Label(self.frame, text="Insert New Golf Cart", bg="skyblue", font=("Arial", 18, "bold")).place(x=135, y=80)
 
-        tk.Label(self.frame, text="College:", bg="skyblue").place(x=80, y=155)
-        self.college = tk.StringVar(value=self.main.colleges[0])
-        self.cb = ttk.Combobox(self.frame, width=40, textvariable=self.college, values=self.main.colleges, state="readonly").place(x=180, y=155)
+        tk.Label(self.frame, text="Plate Number:", bg="skyblue").place(x=80, y=160)
+        self.plate_number = tk.StringVar()
+        ttk.Entry(self.frame, width=30, textvariable=self.plate_number).place(x=180, y=160)
 
-        ttk.Button(self.frame, text="Create", width=10, command=self.create).place(x=220, y=220)
+        tk.Label(self.frame, text="College:", bg="skyblue").place(x=80, y=195)
+        self.college = tk.StringVar(value=self.main.constants.get("colleges")[0])
+        self.cb = ttk.Combobox(self.frame, width=40, textvariable=self.college, values=self.main.constants.get("colleges"), state="readonly").place(x=180, y=195)
 
-        tk.Label(self.frame, text="Create a backup for all golf carts", bg="skyblue").place(x=120, y=280)
-        ttk.Button(self.frame, text="Backup", width=10, command=self.backup).place(x=310, y=277)
+        ttk.Button(self.frame, text="Create", width=10, command=self.create).place(x=220, y=260)
 
-        ttk.Button(self.frame, text="Logout", width=10, command=self.logout).place(x=220, y=340)
+        tk.Label(self.frame, text="Create a backup for all golf carts", bg="skyblue").place(x=120, y=320)
+        ttk.Button(self.frame, text="Backup", width=10, command=self.backup).place(x=310, y=315)
+
+        ttk.Button(self.frame, text="Logout", width=10, command=self.logout).place(x=415, y=360)
 
     def create(self):
+        if not self.plate_number.get():
+            return messagebox.showerror(title="Missing Data", message="You must enter the golf cart plate number.")
+        
         conn = sqlite3.connect("ksu_golf_carts.db")
-        golf_cart = list(conn.execute("SELECT * FROM golf_carts WHERE plate_number=" + self.golf_cart_plate_num.get()))
+        golf_cart = list(conn.execute("SELECT * FROM golf_carts WHERE plate_number=" + self.plate_number.get()))
         if not golf_cart:
-            if not self.college.get() in self.main.colleges:
+            if not self.college.get() in self.main.constants.get("colleges"):
                 return messagebox.showerror(title="Wrong Input", message="The college is not exsits.")
             query = "INSERT INTO golf_carts (plate_number, college) VALUES (?,?)"
-            data = (self.golf_cart_plate_num.get(), self.college.get())
+            data = (self.plate_number.get(), self.college.get())
             conn.execute(query, data)
             conn.commit()
 
-            messagebox.showinfo(title="Golf Cart Created Successfully", message="The golf cart with plate number '{}' in '{}' college created successfully.".format(self.golf_cart_plate_num.get(), self.college.get()))
+            messagebox.showinfo(title="Golf Cart Inserted Successfully", message="The golf cart with plate number '{}' in '{}' college inserted successfully.".format(self.plate_number.get(), self.college.get()))
 
-            self.golf_cart_plate_num.set("")
-            self.college.set("")
+            self.plate_number.set("")
+            self.college.set(self.main.constants.get("colleges")[0])
         else:
             messagebox.showerror(title="Golf Cart Already Exists.", message="The golf cart with plate number '{}' already exists in '{}' college.".format(golf_cart[0][0], golf_cart[0][1]))
     
@@ -51,7 +56,7 @@ class Admin:
         with open("golf_carts_backup.csv", "w") as file:
             writer = csv.writer(file, lineterminator="\n")
             writer.writerows(golf_carts)
-        messagebox.showinfo(title="Backup Created Successfully", message="Stored {} golf carts.".format(len(golf_carts)))
+        messagebox.showinfo(title="Backup Created Successfully", message="Backup created, stored {} golf carts.".format(len(golf_carts)))
 
     def logout(self):
         self.main.change_page("signup")
