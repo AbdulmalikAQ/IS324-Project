@@ -59,6 +59,7 @@ class SignUp:
         elif self.team.get() != 0 and len(self.id.get()) != 6:
             return messagebox.showerror(title="Wrong Data", message="As {}, you must enter 6 digits for ID.".format(self.teams[self.team.get()]))
 
+        self.email_address.set(self.email_address.get().lower())
         if not re.search("^[A-Za-z0-9.]+@ksu.edu.sa$", self.email_address.get()):
             return messagebox.showerror(title="Wrong Data", message="Email address must formatted as 'XXXXXXXX@ksu.edu.sa'")
 
