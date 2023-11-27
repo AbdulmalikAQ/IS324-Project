@@ -19,7 +19,7 @@ class Login:
 
         tk.Label(self.frame, text="Password:", bg="skyblue").place(x=100, y=190)
         self.password = tk.StringVar()
-        ttk.Entry(self.frame, width=30, textvariable=self.password).place(x=200, y=190)
+        ttk.Entry(self.frame, width=30, show="*", textvariable=self.password).place(x=200, y=190)
 
         ttk.Button(self.frame, text="Login", command=self.login).place(x=220, y=260)
 

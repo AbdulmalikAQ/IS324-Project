@@ -10,7 +10,7 @@ class Admin:
         self.frame.grid_propagate(0)
         self.frame.grid()
 
-        tk.Label(self.frame, text="Weclome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=20)
+        tk.Label(self.frame, text="Welcome, {} {}!".format(args.get("first_name"), args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=20)
 
         tk.Label(self.frame, text="Insert New Golf Cart", bg="skyblue", font=("Arial", 18, "bold")).place(x=135, y=80)
 
@@ -53,7 +53,7 @@ class Admin:
     def backup(self):
         conn = sqlite3.connect("ksu_golf_carts.db")
         golf_carts = list(conn.execute("SELECT * FROM golf_carts"))
-        with open("golf_carts_backup.csv", "w") as file:
+        with open("backup.csv", "w") as file:
             writer = csv.writer(file, lineterminator="\n")
             writer.writerows(golf_carts)
         messagebox.showinfo(title="Backup Created Successfully", message="Backup created, stored {} golf carts.".format(len(golf_carts)))
