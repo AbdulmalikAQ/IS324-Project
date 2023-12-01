@@ -3,10 +3,14 @@ from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 from datetime import datetime
 import sqlite3
+import logging
+
+logging.basicConfig(filename="transactions.log", filemode="a", format="%(asctime)s - %(message)s", level=logging.INFO)
 
 class User:
     def __init__(self, main, args = {}):
         self.main = main
+        self.main.window.title("KSU Golf Carts - User Panel")
         self.frame = tk.Frame(self.main.window, width=500, height=400, bg="skyblue")
         self.frame.grid_propagate(0)
         self.frame.grid()
@@ -16,7 +20,7 @@ class User:
         self.notebook = ttk.Notebook(self.frame)
         self.notebook.place(x=0, y=0)
 
-        tk.Label(self.frame, text="Weclome, {} {}!".format(self.args.get("first_name"), self.args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=45)
+        tk.Label(self.frame, text="Welcome, {} {}!".format(self.args.get("first_name"), self.args.get("last_name")), bg="skyblue", font=("Arial", 10, "bold")).place(x=20, y=45)
 
         self.labelframe = tk.Frame(self.notebook, bg="skyblue", width=500, height=400)
 
@@ -72,12 +76,15 @@ class User:
         end_time = datetime.strptime("{} {}:{}".format(self.end_date.get(), self.end_hour.get(), self.end_min.get()), "%d/%m/%Y %H:%M")
         date_now = datetime.now()
         if start_time < date_now:
+            logging.warning("Start time precedes current time, User ID: {}, Location: NONE, Golf Cart Plate Number: NONE, Start Time: {}, End Time: {}".format(self.args.get("user_id"), start_time, end_time))
             return messagebox.showerror(title="Time Error", message="Start time must be after the current time.")
         reserve_time = end_time - start_time
         max_time = self.main.constants.get("user_max_time").get(self.args.get("user_class"))
         if reserve_time.total_seconds() <= 0:
+            logging.warning("Start time precedes end time, User ID: {}, Location: NONE, Golf Cart Plate Number: NONE, Start Time: {}, End Time: {}".format(self.args.get("user_id"), start_time, end_time))
             return messagebox.showerror(title="Time Error", message="End time must be greater than the start time.")
         elif reserve_time.total_seconds() > max_time:
+            logging.warning("Reserve time exceeds the time limit, User ID: {}, Location: NONE, Golf Cart Plate Number: NONE, Start Time: {}, End Time: {}".format(self.args.get("user_id"), start_time, end_time))
             return messagebox.showerror(title="Time Exceed", message="You can't reserve a golf cart longer than {} minutes.".format(max_time / 60))
         else:
             conn = sqlite3.connect("ksu_golf_carts.db")
@@ -98,8 +105,10 @@ class User:
                     conn.execute(query, data)
                     conn.commit()
                     conn.close()
+                    logging.info("Reservation successful, User ID: {}, Location: {}, Golf Cart Plate Number: {}, Start Time: {}, End Time: {}".format(self.args.get("user_id"), self.college.get(), plate, start_time, end_time))
                     return messagebox.showinfo(title="Reservation Successful", message="You have reserved a golf cart with plate number '{}' from '{}' college at '{}' to '{}'".format(plate, self.college.get(), start_time, end_time))
             
+            logging.warning("No golf carts available, User ID: {}, Location: NONE, Golf Cart Plate Number: NONE, Start Time: {}, End Time: {}".format(self.args.get("user_id"), start_time, end_time))
             messagebox.showerror(title="No Golf Carts Available", message="There is no golf carts available from this college at this time.")
 
     def show(self):
@@ -111,6 +120,9 @@ class User:
             reserved_end = datetime.strptime(reserv[3], "%Y-%m-%d %H:%M:%S")
             if reserved_end >= date_now:
                 self.tv_of_reserv.insert(parent="", index=0, values=(reserv[0], reserv[1], datetime.strptime(reserv[2], "%Y-%m-%d %H:%M:%S").strftime("%d/%m/%Y %H:%M"), reserved_end.strftime("%d/%m/%Y %H:%M")))
+
+        if len(self.tv_of_reserv.get_children()) == 0:
+            messagebox.showwarning(title="No Active Reservations", message="You don't have any active reservations at this moment.")
 
     def logout(self):
         self.main.change_page("signup")

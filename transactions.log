@@ -1,0 +1,8 @@
+2023-11-27 10:35:16,561 - Start time precedes current time, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-11-27 09:30:00, End Time: 2023-11-27 11:28:00
+2023-11-27 10:36:52,054 - Start time precedes end time, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-11-27 11:30:00, End Time: 2023-11-27 11:28:00
+2023-11-27 10:37:23,486 - Reserve time exceeds the time limit, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-11-27 11:30:00, End Time: 2023-11-27 13:30:00
+2023-11-27 10:37:45,680 - No golf carts available, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-11-27 11:30:00, End Time: 2023-11-27 12:00:00
+2023-11-27 10:37:56,265 - Reservation successful, User ID: 4431020304, Location: Computer Science and Information Technology, Golf Cart Plate Number: 1, Start Time: 2023-11-27 11:30:00, End Time: 2023-11-27 12:00:00
+2023-12-01 13:11:20,842 - Start time precedes current time, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-12-01 13:10:00, End Time: 2023-12-01 13:30:00
+2023-12-01 13:11:25,497 - Start time precedes current time, User ID: 4431020304, Location: NONE, Golf Cart Plate Number: NONE, Start Time: 2023-12-01 13:11:00, End Time: 2023-12-01 13:30:00
+2023-12-01 13:11:31,419 - Reservation successful, User ID: 4431020304, Location: Computer Science and Information Technology, Golf Cart Plate Number: 1, Start Time: 2023-12-01 13:12:00, End Time: 2023-12-01 13:30:00
