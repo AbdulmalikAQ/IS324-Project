@@ -3,13 +3,13 @@ from tkinter import ttk
 import sqlite3
 
 from pages.login import Login
-from pages.signup import SignUp
+from pages.signup import Signup
 from pages.admin import Admin
 from pages.user import User
 
 pages = {
 	"login": Login,
-	"signup": SignUp,
+	"signup": Signup,
 	"admin": Admin,
 	"user": User
 }
@@ -72,7 +72,6 @@ conn.close()
 class Main:
 	def __init__(self):
 		self.window = tk.Tk()
-		self.window.title("KSU Golf Carts")
 		self.window.geometry("+600+200")
 
 		ttk.Style().theme_use("clam")

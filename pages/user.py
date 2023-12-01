@@ -10,6 +10,7 @@ logging.basicConfig(filename="transactions.log", filemode="a", format="%(asctime
 class User:
     def __init__(self, main, args = {}):
         self.main = main
+        self.main.window.title("KSU Golf Carts - User Panel")
         self.frame = tk.Frame(self.main.window, width=500, height=400, bg="skyblue")
         self.frame.grid_propagate(0)
         self.frame.grid()
@@ -119,6 +120,9 @@ class User:
             reserved_end = datetime.strptime(reserv[3], "%Y-%m-%d %H:%M:%S")
             if reserved_end >= date_now:
                 self.tv_of_reserv.insert(parent="", index=0, values=(reserv[0], reserv[1], datetime.strptime(reserv[2], "%Y-%m-%d %H:%M:%S").strftime("%d/%m/%Y %H:%M"), reserved_end.strftime("%d/%m/%Y %H:%M")))
+
+        if len(self.tv_of_reserv.get_children()) == 0:
+            messagebox.showwarning(title="No Active Reservations", message="You don't have any active reservations at this moment.")
 
     def logout(self):
         self.main.change_page("signup")

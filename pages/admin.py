@@ -6,6 +6,7 @@ import csv
 class Admin:
     def __init__(self, main, args = {}):
         self.main = main
+        self.main.window.title("KSU Golf Carts - Admin Panel")
         self.frame = tk.Frame(self.main.window, width=500, height=400, bg="skyblue")
         self.frame.grid_propagate(0)
         self.frame.grid()

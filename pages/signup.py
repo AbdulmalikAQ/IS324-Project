@@ -4,9 +4,10 @@ import sqlite3
 import hashlib
 import re
 
-class SignUp:
+class Signup:
     def __init__(self, main, args = {}):
         self.main = main
+        self.main.window.title("KSU Golf Carts - Signup")
         self.frame = tk.Frame(self.main.window, width=500, height=400, bg="skyblue")
         self.frame.grid_propagate(0)
         self.frame.grid()
@@ -42,7 +43,7 @@ class SignUp:
         tk.Radiobutton(self.frame, text=self.teams[1], variable=self.team, value=1, bg="skyblue").place(x=260, y=250)
         tk.Radiobutton(self.frame, text=self.teams[2], variable=self.team, value=2, bg="skyblue").place(x=330, y=250)
 
-        ttk.Button(self.frame, text="Sign Up", command=self.signup).place(x=220, y=300)
+        ttk.Button(self.frame, text="Signup", command=self.signup).place(x=220, y=300)
 
         tk.Label(self.frame, text="Already have an account?", bg="skyblue").place(x=135, y=350)
         ttk.Button(self.frame, text="Login", command=self.login).place(x=295, y=345)
