@@ -24,11 +24,11 @@ class Signup:
         self.id = tk.StringVar()
         ttk.Entry(self.frame, width=30, textvariable=self.id).place(x=200, y=90)
 
-        tk.Label(self.frame, text="Email address:", bg="skyblue").place(x=100, y=130)
+        tk.Label(self.frame, text="Email Address:", bg="skyblue").place(x=100, y=130)
         self.email_address = tk.StringVar()
         ttk.Entry(self.frame, width=30, textvariable=self.email_address).place(x=200, y=130)
 
-        tk.Label(self.frame, text="Phone number:", bg="skyblue").place(x=100, y=170)
+        tk.Label(self.frame, text="Phone Number:", bg="skyblue").place(x=100, y=170)
         self.phone_number = tk.StringVar()
         ttk.Entry(self.frame, width=30, textvariable=self.phone_number).place(x=200, y=170)
 

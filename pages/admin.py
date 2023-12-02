@@ -32,7 +32,7 @@ class Admin:
 
     def create(self):
         if not self.plate_number.get():
-            return messagebox.showerror(title="Missing Data", message="You must enter the golf cart plate number.")
+            return messagebox.showerror(title="Missing Data", message="You must enter a golf cart plate number.")
         
         conn = sqlite3.connect("ksu_golf_carts.db")
         golf_cart = list(conn.execute("SELECT * FROM golf_carts WHERE plate_number=" + self.plate_number.get()))
@@ -54,10 +54,19 @@ class Admin:
     def backup(self):
         conn = sqlite3.connect("ksu_golf_carts.db")
         golf_carts = list(conn.execute("SELECT * FROM golf_carts"))
-        with open("backup.csv", "w") as file:
+        reservations = list(conn.execute("SELECT * FROM reservations"))
+        users = list(conn.execute("SELECT * FROM users"))
+        conn.close()
+        with open("backup/golf_carts.csv", "w") as file:
             writer = csv.writer(file, lineterminator="\n")
             writer.writerows(golf_carts)
-        messagebox.showinfo(title="Backup Created Successfully", message="Backup created, stored {} golf carts.".format(len(golf_carts)))
+        with open("backup/reservations.csv", "w") as file:
+            writer = csv.writer(file, lineterminator="\n")
+            writer.writerows(reservations)
+        with open("backup/users.csv", "w") as file:
+            writer = csv.writer(file, lineterminator="\n")
+            writer.writerows(users)
+        messagebox.showinfo(title="Backup Created Successfully", message="Backup created, stored {} golf carts, {} reservations and {} users.".format(len(golf_carts), len(reservations), len(users)))
 
     def logout(self):
         self.main.change_page("signup")

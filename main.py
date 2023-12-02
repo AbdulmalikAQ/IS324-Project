@@ -31,22 +31,6 @@ constants = {
 }
 
 conn = sqlite3.connect("ksu_golf_carts.db")
-conn.execute('''
-	CREATE TABLE IF NOT EXISTS users (
-		user_id INT PRIMARY KEY NOT NULL,
-		first_name TEXT NOT NULL,
-		last_name TEXT NOT NULL,
-		phone_number TEXT NOT NULL,
-		user_class TEXT NOT NULL,
-		email TEXT NOT NULL,
-		password TEXT NOT NULL
-	);
-''')
-
-conn.execute("INSERT OR IGNORE INTO users (user_id, first_name, last_name, email, phone_number, user_class, password) VALUES (?,?,?,?,?,?,?)", ("1234567890", "Admin", "1", "admin@ksu.edu.sa", "0555555555", "Admin", "3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2"))
-# Admin Account
-# User ID: 1234567890
-# Password: Admin123
 
 conn.execute('''
 	CREATE TABLE IF NOT EXISTS golf_carts (
@@ -65,6 +49,23 @@ conn.execute('''
 		FOREIGN KEY (user_id) REFERENCES users(user_id)
 	);
 ''')
+
+conn.execute('''
+	CREATE TABLE IF NOT EXISTS users (
+		user_id INT PRIMARY KEY NOT NULL,
+		first_name TEXT NOT NULL,
+		last_name TEXT NOT NULL,
+		phone_number TEXT NOT NULL,
+		user_class TEXT NOT NULL,
+		email TEXT NOT NULL,
+		password TEXT NOT NULL
+	);
+''')
+
+conn.execute("INSERT OR IGNORE INTO users (user_id, first_name, last_name, email, phone_number, user_class, password) VALUES (?,?,?,?,?,?,?)", ("1234567890", "Admin", "1", "admin@ksu.edu.sa", "0555555555", "Admin", "3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2"))
+# Admin Account
+# User ID: 1234567890
+# Password: Admin123
 
 conn.commit()
 conn.close()
